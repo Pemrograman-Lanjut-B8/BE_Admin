@@ -107,8 +107,30 @@ jobs:
       - name: create ssh key
         run: echo "${{ secrets.SSH_KEY }}" > ssh-key.pem && cat ssh-key.pem
 
+      - name: Update Ubuntu
+        run: sudo apt-get update
+
+      - name: Install deps
+        run: sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+      - name: Add docker GPG key
+        run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+      - name: Security check
+        run: sudo apt-key fingerprint 0EBFCD88
+
+      - name: Setup Repository
+        run: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+      - name: Update again
+        run: sudo apt-get update
+
+      - name: Install docker
+        run: sudo apt-get install docker-ce docker-ce-cli containerd.io
+
       - name: update permission
         run: chmod 400 ssh-key.pem
+
       - name: Deploy to GCP
         run: |
           ssh -o StrictHostKeyChecking=no -i ssh-key.pem ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }} "
