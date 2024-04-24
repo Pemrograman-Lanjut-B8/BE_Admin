@@ -15,6 +15,7 @@ public class BookTest {
     
     @BeforeEach
     void setup() {
+        bookBuilder = new BookBuilderImpl();
         this.books = new ArrayList<>();
         bookBuilder.reset();
         bookBuilder.setJudulBuku("Judul Buku 1");
