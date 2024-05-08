@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,12 +49,13 @@ public class BookServiceTest {
         bookBuilderImpl.setTanggalTerbit(LocalDate.parse("2020-01-01"));
         Book book = bookBuilderImpl.getBook();
 
-        when(bookRepository.createBook(any(Book.class))).thenReturn(book);
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
 
-        Book createdBook = bookService.createBook(book);
+        CompletableFuture<Book> createdBookFuture = bookService.createBook(book);
+        Book createdBook = createdBookFuture.join();
 
         assertEquals(book, createdBook);
-        verify(bookRepository, times(1)).createBook(book);
+        verify(bookRepository, times(1)).save(book);
     }
 
     @Test
@@ -75,7 +77,8 @@ public class BookServiceTest {
 
         when(bookRepository.findByIsbn("ISBN 1")).thenReturn(book);
 
-        Book foundBook = bookService.findByIsbn("ISBN 1");
+        CompletableFuture<Book> foundBookFuture = bookService.findByIsbn("ISBN 1");
+        Book foundBook = foundBookFuture.join();
 
         assertEquals(book, foundBook);
         verify(bookRepository, times(1)).findByIsbn("ISBN 1");
@@ -84,7 +87,7 @@ public class BookServiceTest {
     @Test
     void testDeleteBook() {
         bookService.deleteByIsbn("ISBN 1");
-        verify(bookRepository, times(1)).delete("ISBN 1");
+        verify(bookRepository, times(1)).delete(bookRepository.findByIsbn("ISBN 1"));
     }
 
     @Test
@@ -106,6 +109,7 @@ public class BookServiceTest {
 
         bookService.update("ISBN 1", updatedBook);
 
-        verify(bookRepository, times(1)).update("ISBN 1", updatedBook);
+        verify(bookRepository, times(1)).findByIsbn("ISBN 1");
+        verify(bookRepository, times(1)).save(updatedBook);
     }
 }
