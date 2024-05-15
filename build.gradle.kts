@@ -46,6 +46,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
+    implementation ("jakarta.validation:jakarta.validation-api:3.0.2")
 }
 
 tasks.register<Test>("unitTest") {
