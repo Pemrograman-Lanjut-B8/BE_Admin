@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.admin.controller;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,10 +37,69 @@ public class AdminController {
     }
 
     @PostMapping("/book")
-    public ResponseEntity<?> addBook(
-        @RequestBody Map<String, String> bookData
-    ) {
-        // Check if the request body contains the required fields and if the fields are valid
+    public CompletableFuture<ResponseEntity<?>> addBook(@RequestBody Map<String, String> bookData) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                validateBookData(bookData);
+                prepareBookBuilder(bookData);
+                Book addedBook = bookService.createBook(bookBuilder.getBook()).join();
+                return ResponseEntity.ok(addedBook);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body("Failed to create book, invalid data format");
+            }
+        });
+    }
+
+    @PutMapping("/book/{isbn}")
+    public CompletableFuture<ResponseEntity<?>> updateBook(@PathVariable String isbn, @RequestBody Map<String, String> bookData) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Book existingBook = bookService.findByIsbn(isbn).join();
+                if (existingBook == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                         .body("Book with ISBN " + isbn + " not found");
+                }
+                validateBookData(bookData);
+                prepareBookBuilder(bookData);
+                Book updatedBook = bookService.update(isbn, bookBuilder.getBook()).join();
+                return ResponseEntity.ok(updatedBook);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body("Failed to update book, invalid data format");
+            }
+        });
+    }
+
+    @DeleteMapping("/book/{isbn}")
+    public CompletableFuture<ResponseEntity<?>> deleteBook(@PathVariable String isbn) {
+        return CompletableFuture.supplyAsync(() -> {
+            Book existingBook = bookService.findByIsbn(isbn).join();
+            if (existingBook == null) {
+                return ResponseEntity.notFound().build();
+            }
+            bookService.deleteByIsbn(isbn).join();
+            return ResponseEntity.ok().build();
+        });
+    }
+
+    @GetMapping("/book/{isbn}")
+    public CompletableFuture<ResponseEntity<?>> getBook(@PathVariable String isbn) {
+        return CompletableFuture.supplyAsync(() -> {
+            Book existingBook = bookService.findByIsbn(isbn).join();
+            if (existingBook == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(existingBook);
+        });
+    }
+
+    @GetMapping("/books")
+    public CompletableFuture<ResponseEntity<?>> getAllBooks() {
+        return CompletableFuture.supplyAsync(() -> ResponseEntity.ok(bookService.findAll().join()));
+    }
+
+    private void validateBookData(Map<String, String> bookData) throws IllegalArgumentException {
         if (
             !bookData.containsKey("judulBuku") ||
             !bookData.containsKey("penulis") ||
@@ -54,110 +114,23 @@ public class AdminController {
             !bookData.containsKey("rating") ||
             !bookData.containsKey("tanggalTerbit")
         ) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body("Data buku tidak lengkap");
-        }
-
-        try {
-            bookBuilder.reset();
-            bookBuilder.setJudulBuku(bookData.get("judulBuku"));
-            bookBuilder.setPenulis(bookData.get("penulis"));
-            bookBuilder.setPenerbit(bookData.get("penerbit"));
-            bookBuilder.setDeskripsi(bookData.get("deskripsi"));
-            bookBuilder.setHarga(Double.parseDouble(bookData.get("harga")));
-            bookBuilder.setStok(Integer.parseInt(bookData.get("stok")));
-            bookBuilder.setIsbn(bookData.get("isbn"));
-            bookBuilder.setJumlahHalaman(Integer.parseInt(bookData.get("jumlahHalaman")));
-            bookBuilder.setFotoCover(bookData.get("fotoCover"));
-            bookBuilder.setKategori(bookData.get("kategori"));
-            bookBuilder.setRating(Double.parseDouble(bookData.get("rating")));
-            bookBuilder.setTanggalTerbit(LocalDate.parse(bookData.get("tanggalTerbit")));
-            Book addedBook = bookService.createBook(bookBuilder.getBook());
-            return ResponseEntity.ok(addedBook);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body("Gagal membuat buku, format data tidak valid");
+            throw new IllegalArgumentException("Incomplete book data");
         }
     }
 
-    @PutMapping("/book/{isbn}")
-    public ResponseEntity<?> updateBook(
-        @PathVariable String isbn,
-        @RequestBody Map<String, String> bookData
-    ) {
-        // Check if the book exists
-        if (bookService.findByIsbn(isbn) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body("Buku dengan ISBN " + isbn + " tidak ditemukan");
-        }
-        
-        // Check if the request body contains the required fields and if the fields are valid
-        if (
-            !bookData.containsKey("judulBuku") ||
-            !bookData.containsKey("penulis") ||
-            !bookData.containsKey("penerbit") ||
-            !bookData.containsKey("deskripsi") ||
-            !bookData.containsKey("harga") ||
-            !bookData.containsKey("stok") ||
-            !bookData.containsKey("jumlahHalaman") ||
-            !bookData.containsKey("fotoCover") ||
-            !bookData.containsKey("kategori") ||
-            !bookData.containsKey("rating") ||
-            !bookData.containsKey("tanggalTerbit")
-        ) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body("Data buku tidak lengkap");
-        }
-
-        try {
-            bookBuilder.reset();
-            bookBuilder.setJudulBuku(bookData.get("judulBuku"));
-            bookBuilder.setPenulis(bookData.get("penulis"));
-            bookBuilder.setPenerbit(bookData.get("penerbit"));
-            bookBuilder.setDeskripsi(bookData.get("deskripsi"));
-            bookBuilder.setHarga(Double.parseDouble(bookData.get("harga")));
-            bookBuilder.setStok(Integer.parseInt(bookData.get("stok")));
-            bookBuilder.setIsbn(isbn);
-            bookBuilder.setJumlahHalaman(Integer.parseInt(bookData.get("jumlahHalaman")));
-            bookBuilder.setFotoCover(bookData.get("fotoCover"));
-            bookBuilder.setKategori(bookData.get("kategori"));
-            bookBuilder.setRating(Double.parseDouble(bookData.get("rating")));
-            bookBuilder.setTanggalTerbit(LocalDate.parse(bookData.get("tanggalTerbit")));
-            Book updatedBook = bookService.update(isbn, bookBuilder.getBook());
-            return ResponseEntity.ok(updatedBook);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body("Gagal mengupdate buku, format data tidak valid");
-        }
-    }
-
-    @DeleteMapping("/book/{isbn}")
-    public ResponseEntity<?> deleteBook(
-        @PathVariable String isbn
-    ) {
-        // Check if the book exists
-        if (bookService.findByIsbn(isbn) == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        bookService.deleteByIsbn(isbn);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/book/{isbn}")
-    public ResponseEntity<?> getBook(
-        @PathVariable String isbn
-    ) {
-        // Check if the book exists
-        if (bookService.findByIsbn(isbn) == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(bookService.findByIsbn(isbn));
-    }
-
-    @GetMapping("/books")
-    public ResponseEntity<?> getAllBooks() {
-        return ResponseEntity.ok(bookService.findAll());
+    private void prepareBookBuilder(Map<String, String> bookData) {
+        bookBuilder.reset();
+        bookBuilder.setJudulBuku(bookData.get("judulBuku"));
+        bookBuilder.setPenulis(bookData.get("penulis"));
+        bookBuilder.setPenerbit(bookData.get("penerbit"));
+        bookBuilder.setDeskripsi(bookData.get("deskripsi"));
+        bookBuilder.setHarga(Double.parseDouble(bookData.get("harga")));
+        bookBuilder.setStok(Integer.parseInt(bookData.get("stok")));
+        bookBuilder.setIsbn(bookData.get("isbn"));
+        bookBuilder.setJumlahHalaman(Integer.parseInt(bookData.get("jumlahHalaman")));
+        bookBuilder.setFotoCover(bookData.get("fotoCover"));
+        bookBuilder.setKategori(bookData.get("kategori"));
+        bookBuilder.setRating(Double.parseDouble(bookData.get("rating")));
+        bookBuilder.setTanggalTerbit(LocalDate.parse(bookData.get("tanggalTerbit")));
     }
 }

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,11 +48,11 @@ public class BookRepositoryTest {
         
         when(bookBuilder.getBook()).thenReturn(bookBuilderImpl.getBook());
     
-        bookRepository.createBook(bookBuilder.getBook());
+        bookRepository.save(bookBuilder.getBook());
     
-        Iterator<Book> books = bookRepository.findAll();
-        assertTrue(books.hasNext());
-        Book savedBook = books.next();
+        List<Book> books = bookRepository.findAll();
+        assertEquals(1, books.size());
+        Book savedBook = books.get(0);
         assertTrue(savedBook.getJudulBuku().equals("Judul Buku 1"));
         assertTrue(savedBook.getPenulis().equals("Penulis 1"));
         assertTrue(savedBook.getPenerbit().equals("Penerbit 1"));
@@ -69,8 +69,8 @@ public class BookRepositoryTest {
 
     @Test
     void testFindAllIfEmpty() {
-        Iterator<Book> books = bookRepository.findAll();
-        assertFalse(books.hasNext());
+        List<Book> books = bookRepository.findAll();
+        assertFalse(books.iterator().hasNext());   
     }
     
     @Test
@@ -89,12 +89,12 @@ public class BookRepositoryTest {
         bookBuilderImpl.setRating(4.5);
         bookBuilderImpl.setTanggalTerbit(LocalDate.parse("2020-01-01"));
     
-        bookRepository.createBook(bookBuilderImpl.getBook());
+        bookRepository.save(bookBuilderImpl.getBook());
     
-        bookRepository.delete("ISBN 1");
+        bookRepository.delete(bookBuilderImpl.getBook());
     
-        Iterator<Book> books = bookRepository.findAll();
-        assertFalse(books.hasNext());
+        List<Book> books = bookRepository.findAll();
+        assertFalse(books.iterator().hasNext());
     }
     
     @Test
@@ -115,7 +115,7 @@ public class BookRepositoryTest {
         
         when(bookBuilder.getBook()).thenReturn(bookBuilderImpl1.getBook());
 
-        bookRepository.createBook(bookBuilder.getBook());
+        bookRepository.save(bookBuilder.getBook());
     
         BookBuilderImpl bookBuilderImpl2 = new BookBuilderImpl();
         bookBuilderImpl2.setJudulBuku("Judul Buku 2");
@@ -132,23 +132,23 @@ public class BookRepositoryTest {
         bookBuilderImpl2.setTanggalTerbit(LocalDate.parse("2020-02-02"));
 
         when(bookBuilder.getBook()).thenReturn(bookBuilderImpl2.getBook());
-    
-        bookRepository.update("ISBN 1", bookBuilder.getBook());
-        
-        Iterator<Book> books = bookRepository.findAll();
-        assertTrue(books.hasNext());
-        Book updatedBook = books.next();
-        assertEquals("Judul Buku 2", updatedBook.getJudulBuku());
-        assertEquals("Penulis 2", updatedBook.getPenulis());
-        assertEquals("Penerbit 2", updatedBook.getPenerbit());
-        assertEquals("Deskripsi 2", updatedBook.getDeskripsi());
-        assertEquals(200000.0, updatedBook.getHarga());
-        assertEquals(20, updatedBook.getStok());
-        assertEquals("ISBN 2", updatedBook.getIsbn());
-        assertEquals(200, updatedBook.getJumlahHalaman());
-        assertEquals("Foto Cover 2", updatedBook.getFotoCover());
-        assertEquals("Kategori 2", updatedBook.getKategori());
-        assertEquals(4.0, updatedBook.getRating());
-        assertEquals(LocalDate.parse("2020-02-02"), updatedBook.getTanggalTerbit());
+
+        bookRepository.save(bookBuilder.getBook());
+
+        List<Book> books = bookRepository.findAll();
+        assertEquals(1, books.size());
+        Book savedBook = books.get(0);
+        assertTrue(savedBook.getJudulBuku().equals("Judul Buku 2"));
+        assertTrue(savedBook.getPenulis().equals("Penulis 2"));
+        assertTrue(savedBook.getPenerbit().equals("Penerbit 2"));
+        assertTrue(savedBook.getDeskripsi().equals("Deskripsi 2"));
+        assertTrue(savedBook.getHarga() == 200000.0);
+        assertTrue(savedBook.getStok() == 20);
+        assertTrue(savedBook.getIsbn().equals("ISBN 2"));
+        assertTrue(savedBook.getJumlahHalaman() == 200);
+        assertTrue(savedBook.getFotoCover().equals("Foto Cover 2"));
+        assertTrue(savedBook.getKategori().equals("Kategori 2"));
+        assertTrue(savedBook.getRating() == 4.0);
+        assertTrue(savedBook.getTanggalTerbit().equals(LocalDate.parse("2020-02-02")));
     }
 }    
