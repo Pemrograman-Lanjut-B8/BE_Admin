@@ -107,7 +107,6 @@ public class AdminController {
             !bookData.containsKey("deskripsi") ||
             !bookData.containsKey("harga") ||
             !bookData.containsKey("stok") ||
-            !bookData.containsKey("isbn") ||
             !bookData.containsKey("jumlahHalaman") ||
             !bookData.containsKey("fotoCover") ||
             !bookData.containsKey("kategori") ||
