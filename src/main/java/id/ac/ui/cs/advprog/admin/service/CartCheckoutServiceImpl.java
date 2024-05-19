@@ -2,14 +2,19 @@ package id.ac.ui.cs.advprog.admin.service;
 
 import id.ac.ui.cs.advprog.admin.model.Book;
 import id.ac.ui.cs.advprog.admin.model.CartCheckout;
+import id.ac.ui.cs.advprog.admin.model.LogAdmin;
 import id.ac.ui.cs.advprog.admin.model.UserEntity;
 import id.ac.ui.cs.advprog.admin.repository.CartCheckoutRepository;
 
+import id.ac.ui.cs.advprog.admin.repository.LogRepository;
 import id.ac.ui.cs.advprog.admin.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 
@@ -21,6 +26,9 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
 
     @Autowired
     private UserEntityRepository userEntityRepository;
+
+    @Autowired
+    private LogRepository logRepository;
 
     public List<CartCheckout> findAllCartCheckout() {
             return cartCheckoutRepository.findAll();
@@ -57,15 +65,38 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
         }
 
         String status = cartCheckout.getStatus();
+
         if (status.equals("Menunggu Pengiriman Buku")) {
-            cartCheckout.setStatus("Dalam Pengiriman");
+            status = "Dalam Pengiriman";
 
         }
 
         else if (status.equals("Dalam Pengiriman")) {
-            cartCheckout.setStatus("Pengiriman Selesai");
+           status = "Pengiriman Selesai";
         }
 
+        cartCheckout.setStatus(status);
+
+        String finalStatus = status;
+
+        CompletableFuture.runAsync(() -> logUpdateStatus(cartCheckout, finalStatus));
         cartCheckoutRepository.save(cartCheckout);
     }
+
+
+    public void logUpdateStatus(CartCheckout cartCheckout, String status) {
+
+        long id = cartCheckout.getId();
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        String logString = "Status Checkout dengan id: "+ id + " berhasil diubah menjadi " + status + " pada " + date;
+
+        LogAdmin log = new LogAdmin(logString, cartCheckout);
+
+        logRepository.save(log);
+    }
+
+    public List<LogAdmin> getLog (CartCheckout cartCheckout) {
+        return logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout);
+    }
+
 }
