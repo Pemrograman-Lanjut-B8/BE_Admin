@@ -95,7 +95,7 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
         logRepository.save(log);
     }
 
-    public List<LogAdmin> getLog (CartCheckout cartCheckout) {
+    public CompletableFuture<List<LogAdmin>> getLog (CartCheckout cartCheckout) {
         return logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout);
     }
 
