@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.admin.service;
 
+import id.ac.ui.cs.advprog.admin.dto.CartCheckoutAdminDTO;
+import id.ac.ui.cs.advprog.admin.dto.CartCheckoutDTO;
 import id.ac.ui.cs.advprog.admin.model.Book;
 import id.ac.ui.cs.advprog.admin.model.CartCheckout;
 import id.ac.ui.cs.advprog.admin.model.LogAdmin;
@@ -9,7 +11,9 @@ import id.ac.ui.cs.advprog.admin.repository.CartCheckoutRepository;
 import id.ac.ui.cs.advprog.admin.repository.LogRepository;
 import id.ac.ui.cs.advprog.admin.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,9 +34,46 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
     @Autowired
     private LogRepository logRepository;
 
-    public List<CartCheckout> findAllCartCheckout() {
-            return cartCheckoutRepository.findAll();
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public List<CartCheckoutAdminDTO> findAllCartCheckout() {
+        String url = "http://localhost:8090/cart/list";
+
+        ResponseEntity<CartCheckoutDTO[]> cartCheckoutResult = restTemplate.getForEntity(url, CartCheckoutDTO[].class);
+
+        if (cartCheckoutResult.getStatusCode().is2xxSuccessful()) {
+            return List.of(cartCheckoutResult.getBody()).stream().map(
+                    cartCheckoutDTO -> {
+                        CartCheckoutAdminDTO cartCheckout = new CartCheckoutAdminDTO();
+                        Optional<UserEntity> userOptional = userEntityRepository.findById(UUID.fromString(cartCheckoutDTO.getUserId()));
+
+                        if (userOptional.isEmpty()) {
+                            return null;
+                        }
+
+                        UserEntity user = userOptional.get();
+                        cartCheckout.setId(cartCheckoutDTO.getId());
+                        cartCheckout.setItems(cartCheckoutDTO.getItems());
+                        cartCheckout.setNamaUser(user.getFullName());
+                        cartCheckout.setEmailUser(user.getEmail());
+                        cartCheckout.setPhoneNumberUser(user.getPhoneNumber());
+                        cartCheckout.setTotalPrice(cartCheckoutDTO.getTotalPrice());
+                        cartCheckout.setStatus(cartCheckoutDTO.getStatus());
+
+                        return cartCheckout;
+                    }
+
+            ).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
+
     }
+
+//    public List<CartCheckout> findAllCartCheckout() {
+//            return cartCheckoutRepository.findAll();
+//    }
 
     public CartCheckout findCartCheckoutById(Long id) {
         return cartCheckoutRepository.findCartCheckoutById(id);
