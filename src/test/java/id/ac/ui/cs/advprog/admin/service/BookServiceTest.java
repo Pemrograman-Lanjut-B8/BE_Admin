@@ -48,12 +48,12 @@ public class BookServiceTest {
         bookBuilderImpl.setTanggalTerbit(LocalDate.parse("2020-01-01"));
         Book book = bookBuilderImpl.getBook();
 
-        when(bookRepository.createBook(any(Book.class))).thenReturn(book);
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
 
         Book createdBook = bookService.createBook(book);
 
         assertEquals(book, createdBook);
-        verify(bookRepository, times(1)).createBook(book);
+        verify(bookRepository, times(1)).save(book);
     }
 
     @Test
@@ -84,28 +84,39 @@ public class BookServiceTest {
     @Test
     void testDeleteBook() {
         bookService.deleteByIsbn("ISBN 1");
-        verify(bookRepository, times(1)).delete("ISBN 1");
+        verify(bookRepository, times(1)).delete(bookRepository.findByIsbn("ISBN 1"));
     }
 
     @Test
     void testUpdateBook() {
-        BookBuilderImpl updatedBookBuilder = new BookBuilderImpl();
-        updatedBookBuilder.setJudulBuku("Judul Buku 2");
-        updatedBookBuilder.setPenulis("Penulis 2");
-        updatedBookBuilder.setPenerbit("Penerbit 2");
-        updatedBookBuilder.setDeskripsi("Deskripsi 2");
-        updatedBookBuilder.setHarga(200000.0);
-        updatedBookBuilder.setStok(20);
-        updatedBookBuilder.setIsbn("ISBN 2");
-        updatedBookBuilder.setJumlahHalaman(200);
-        updatedBookBuilder.setFotoCover("Foto Cover 2");
-        updatedBookBuilder.setKategori("Kategori 2");
-        updatedBookBuilder.setRating(4.0);
-        updatedBookBuilder.setTanggalTerbit(LocalDate.parse("2020-02-02"));
-        Book updatedBook = updatedBookBuilder.getBook();
+        bookService.update(
+            "ISBN 1",
+            "Judul Buku 2",
+            "Penulis 2",
+            "Penerbit 2",
+            "Deskripsi 2",
+            200000.0,
+            20,
+            LocalDate.parse("2020-02-02"),
+            200,
+            "Foto Cover 2",
+            "Kategori 2",
+            4.0
+        );
 
-        bookService.update("ISBN 1", updatedBook);
-
-        verify(bookRepository, times(1)).update("ISBN 1", updatedBook);
+        verify(bookRepository, times(1)).update(
+            "Judul Buku 2",
+            "Penulis 2",
+            "Penerbit 2",
+            "Deskripsi 2",
+            200000.0,
+            20,
+            LocalDate.parse("2020-02-02"),
+            200,
+            "Foto Cover 2",
+            "Kategori 2",
+            4.0,
+            "ISBN 1"
+        );
     }
 }

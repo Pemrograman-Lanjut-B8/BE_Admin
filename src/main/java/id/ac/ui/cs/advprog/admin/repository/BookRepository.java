@@ -1,62 +1,24 @@
 package id.ac.ui.cs.advprog.admin.repository;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import id.ac.ui.cs.advprog.admin.model.Book;
-import id.ac.ui.cs.advprog.admin.model.builders.BookBuilderImpl;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
 @Repository
-public class BookRepository {
-    private List<Book> booksData = new ArrayList<>();
+public interface BookRepository extends JpaRepository<Book, String>{
+    @SuppressWarnings("null")
+    List<Book> findAll();
+    Book findByIsbn(String isbn);
 
-    @Autowired
-    private BookBuilderImpl bookBuilder;
-
-    public Book createBook(Book book) {
-        booksData.add(book);
-        return book;
-    }
-
-    public Iterator<Book> findAll() {
-        return booksData.iterator();
-    }
-
-    public Book update(
-        String isbn,
-        Book newBook
-    ) {
-        for (int i = 0; i < booksData.size(); i++) {
-            Book book = booksData.get(i);
-            if (book.getIsbn().equals(isbn)) {
-                bookBuilder.reset();
-                bookBuilder.setBook(newBook);
-                Book updatedBook = bookBuilder.getBook();
-                booksData.set(i, updatedBook);
-                return updatedBook;
-            }
-        }
-
-        return null;
-    }
-
-    public void delete(String isbn) {
-        booksData.removeIf(book -> book.getIsbn().equals(isbn));
-    }
-
-    public Book findByIsbn(String isbn) {
-        for (Book book : booksData) {
-            if (book.getIsbn().equals(isbn)) {
-                return book;
-            }
-        }
-
-        return null;
-    }
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("update Book b set b.judulBuku = ?1, b.penulis = ?2, b.penerbit = ?3, b.deskripsi = ?4, b.harga = ?5, b.stok = ?6, b.tanggalTerbit = ?7, b.jumlahHalaman = ?8, b.fotoCover = ?9, b.kategori = ?10, b.rating = ?11 where b.isbn = ?12")
+    void update(String judulBuku, String penulis, String penerbit, String deskripsi, double harga, int stok, LocalDate tanggalTerbit, int jumlahHalaman, String fotoCover, String kategori, double rating, String isbn);
 }

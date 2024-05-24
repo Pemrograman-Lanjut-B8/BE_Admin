@@ -1,11 +1,11 @@
 package id.ac.ui.cs.advprog.admin.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import id.ac.ui.cs.advprog.admin.model.Book;
 import id.ac.ui.cs.advprog.admin.repository.BookRepository;
@@ -17,15 +17,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book createBook(Book book) {
-        return bookRepository.createBook(book);
+        return bookRepository.save(book);
     }
 
     @Override
     public List<Book> findAll() {
-        Iterator<Book> booksIterator = bookRepository.findAll();
-        List<Book> bookList = new ArrayList<>();
-        booksIterator.forEachRemaining(bookList::add);
-        return bookList;
+        return bookRepository.findAll();
     }
 
     @Override
@@ -34,12 +31,39 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book update(String isbn, Book newBook) {
-        return bookRepository.update(isbn, newBook);
+    @Transactional
+    public void update(String isbn, 
+        String judulBuku, 
+        String penulis, 
+        String penerbit, 
+        String deskripsi, 
+        double harga, 
+        int stok, 
+        LocalDate tanggalTerbit, 
+        int jumlahHalaman, 
+        String fotoCover, 
+        String kategori, 
+        double rating
+    ) {
+        bookRepository.update(
+            judulBuku, 
+            penulis, 
+            penerbit, 
+            deskripsi, 
+            harga, 
+            stok, 
+            tanggalTerbit, 
+            jumlahHalaman, 
+            fotoCover, 
+            kategori, 
+            rating, 
+            isbn);
+
+        bookRepository.flush();
     }
 
     @Override
     public void deleteByIsbn(String isbn) {
-        bookRepository.delete(isbn);
+        bookRepository.delete(bookRepository.findByIsbn(isbn));
     }
 }
