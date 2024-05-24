@@ -3,7 +3,7 @@ name: Java CI/CD Pipeline
 on:
   push:
     branches:
-      - develop-initial-crud-book
+      - main
 
 jobs:
   build:
