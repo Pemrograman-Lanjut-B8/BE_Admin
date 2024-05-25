@@ -15,5 +15,5 @@ public interface BookBuilder {
     void setJumlahHalaman(int jumlahHalaman);
     void setFotoCover(String fotoCover);
     void setKategori(String kategori);
-    void setRating(double rating);
+//    void setRating(double rating);
 }

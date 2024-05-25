@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
             book.setJumlahHalaman(newBook.getJumlahHalaman());
             book.setFotoCover(newBook.getFotoCover());
             book.setKategori(newBook.getKategori());
-            book.setRating(newBook.getRating());
+//            book.setRating(newBook.getRating());
             return CompletableFuture.completedFuture(bookRepository.save(book));
         }
         return CompletableFuture.completedFuture(null);

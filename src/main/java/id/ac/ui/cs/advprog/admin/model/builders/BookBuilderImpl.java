@@ -75,10 +75,10 @@ public class BookBuilderImpl implements BookBuilder {
         book.setKategori(kategori);
     }
 
-    @Override
-    public void setRating(double rating) {
-        book.setRating(rating);
-    }
+//    @Override
+//    public void setRating(double rating) {
+//        book.setRating(rating);
+//    }
     
     public Book getBook() {
         Book result = this.book;

@@ -6,6 +6,7 @@ import id.ac.ui.cs.advprog.admin.model.Book;
 import id.ac.ui.cs.advprog.admin.model.CartCheckout;
 import id.ac.ui.cs.advprog.admin.model.LogAdmin;
 import id.ac.ui.cs.advprog.admin.model.UserEntity;
+import id.ac.ui.cs.advprog.admin.repository.BookRepository;
 import id.ac.ui.cs.advprog.admin.repository.CartCheckoutRepository;
 
 import id.ac.ui.cs.advprog.admin.repository.LogRepository;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartCheckoutServiceImpl implements CartCheckoutService {
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private CartCheckoutRepository cartCheckoutRepository;
@@ -71,10 +75,6 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
 
     }
 
-//    public List<CartCheckout> findAllCartCheckout() {
-//            return cartCheckoutRepository.findAll();
-//    }
-
     public CartCheckout findCartCheckoutById(Long id) {
         return cartCheckoutRepository.findCartCheckoutById(id);
     }
@@ -86,12 +86,13 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
     }
 
     public List<CartCheckout> findCartCheckoutByBook(String book) {
+        Book books = bookRepository.findByIsbn(book);
 
         List<CartCheckout> cartCheckouts = cartCheckoutRepository.findAll();
 
         return cartCheckouts.stream().filter(cartCheckout ->
             cartCheckout.getItems().stream().anyMatch(cartItems ->
-                 cartItems.getBook().getJudulBuku().contains(book)
+                 cartItems.getBook().getJudulBuku().contains(books.getJudulBuku())
             )
         ).collect(Collectors.toList());
 

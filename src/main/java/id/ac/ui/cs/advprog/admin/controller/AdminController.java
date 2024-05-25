@@ -130,7 +130,7 @@ public class AdminController {
         bookBuilder.setJumlahHalaman(Integer.parseInt(bookData.get("jumlahHalaman")));
         bookBuilder.setFotoCover(bookData.get("fotoCover"));
         bookBuilder.setKategori(bookData.get("kategori"));
-        bookBuilder.setRating(Double.parseDouble(bookData.get("rating")));
+//        bookBuilder.setRating(Double.parseDouble(bookData.get("rating")));
         bookBuilder.setTanggalTerbit(LocalDate.parse(bookData.get("tanggalTerbit")));
     }
 }
