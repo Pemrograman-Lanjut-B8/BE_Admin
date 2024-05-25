@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -119,4 +121,19 @@ public class BookServiceTest {
             "ISBN 1"
         );
     }
+
+    @Test
+    void testFindAll() {
+        List<Book> mockBooks = new ArrayList<>();
+        mockBooks.add(new Book());
+        mockBooks.add(new Book());
+        when(bookRepository.findAll()).thenReturn(mockBooks);
+
+        List<Book> foundBooks = bookService.findAll();
+
+        assertEquals(mockBooks.size(), foundBooks.size());
+        assertEquals(mockBooks, foundBooks);
+        verify(bookRepository, times(1)).findAll();
+    }
+
 }
