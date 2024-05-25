@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.admin.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,5 +77,14 @@ public class BookTest {
         assert books.get(1).getKategori().equals("Kategori 2");
         assert books.get(1).getRating() == 4.0;
         assert books.get(1).getTanggalTerbit().equals(LocalDate.parse("2020-02-02"));
+    }
+
+    @Test
+    void testSetBook() {
+        BookBuilderImpl bookBuilder = new BookBuilderImpl();
+        Book book = new Book();
+        bookBuilder.setBook(book);
+        Book result = bookBuilder.getBook();
+        assertEquals(book, result);
     }
 }
