@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 import id.ac.ui.cs.advprog.admin.model.Book;
-import id.ac.ui.cs.advprog.admin.model.interfaces.BookBuilder;
 
 @Component
 public class BookBuilderImpl implements BookBuilder {

@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.admin.model.interfaces;
+package id.ac.ui.cs.advprog.admin.model.builders;
 
 import java.time.LocalDate;
 
