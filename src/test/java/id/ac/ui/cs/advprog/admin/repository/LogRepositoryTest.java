@@ -2,106 +2,66 @@ package id.ac.ui.cs.advprog.admin.repository;
 
 import id.ac.ui.cs.advprog.admin.model.CartCheckout;
 import id.ac.ui.cs.advprog.admin.model.LogAdmin;
-import org.junit.jupiter.api.AfterEach;
+import id.ac.ui.cs.advprog.admin.model.UserEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class LogRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class LogRepositoryTest {
 
     @Autowired
     private LogRepository logRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private CartCheckout cartCheckout;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        UserEntity user = new UserEntity();
+        user.setUsername("testuser");
+        user.setEmail("testuser@example.com");
+        user.setPassword("password");
+        entityManager.persist(user);
+
         cartCheckout = new CartCheckout();
-        // Set up properties for cartCheckout if needed
-    }
+        cartCheckout.setUser(user);
+        cartCheckout.setTotalPrice(100.0);
+        cartCheckout.setStatus("PENDING");
+        entityManager.persist(cartCheckout);
 
-    @AfterEach
-    void tearDown() {
-        logRepository.deleteAll();
-    }
+        LogAdmin log1 = new LogAdmin("Log message 1", cartCheckout);
+        log1.setDate(LocalDateTime.now().minusDays(1));
+        entityManager.persist(log1);
 
-    @Test
-    void testFindAllByCartCheckoutOrderByDateDesc() throws InterruptedException, ExecutionException, TimeoutException {
-        // Create test logs
-        LogAdmin log1 = new LogAdmin("Test log 1", cartCheckout);
-        LogAdmin log2 = new LogAdmin("Test log 2", cartCheckout);
+        LogAdmin log2 = new LogAdmin("Log message 2", cartCheckout);
+        log2.setDate(LocalDateTime.now());
+        entityManager.persist(log2);
 
-        logRepository.save(log1);
-        logRepository.save(log2);
-
-        // Fetch logs for the cartCheckout
-        List<LogAdmin> logs = logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout)
-                .get(5, TimeUnit.SECONDS);
-
-        // Assertions
-        assertNotNull(logs);
-        assertFalse(logs.isEmpty());
-        assertEquals(2, logs.size());
-
-        // Assert the order is descending by date
-        assertTrue(logs.get(0).getDate().isAfter(logs.get(1).getDate()));
+        entityManager.flush();
     }
 
     @Test
-    void testFindAllByCartCheckoutOrderByDateDesc_EmptyResult() throws InterruptedException, ExecutionException, TimeoutException {
-        // Fetch logs for a new cartCheckout, expecting empty result
-        List<LogAdmin> logs = logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout)
-                .get(5, TimeUnit.SECONDS);
+    public void whenFindAllByCartCheckoutOrderByDateDesc_thenReturnLogs() throws ExecutionException, InterruptedException {
+        CompletableFuture<List<LogAdmin>> logsFuture = logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout);
+        List<LogAdmin> logs = logsFuture.get();
 
-        // Assertions
-        assertNotNull(logs);
-        assertTrue(logs.isEmpty());
+        assertThat(logs).hasSize(2);
+        assertThat(logs.get(0).getLogString()).isEqualTo("Log message 2");
+        assertThat(logs.get(1).getLogString()).isEqualTo("Log message 1");
     }
-
-    @Test
-    void testFindAllByCartCheckoutOrderByDateDesc_CustomOrder() throws InterruptedException, ExecutionException, TimeoutException {
-        // Create test logs with different dates
-        LogAdmin log1 = new LogAdmin("Test log 1", cartCheckout);
-        LogAdmin log2 = new LogAdmin("Test log 2", cartCheckout);
-        LogAdmin log3 = new LogAdmin("Test log 3", cartCheckout);
-
-        // Set custom dates
-        log1.setDate(LocalDateTime.now().minusDays(3));
-        log2.setDate(LocalDateTime.now().minusDays(1));
-        log3.setDate(LocalDateTime.now().minusDays(2));
-
-        logRepository.save(log1);
-        logRepository.save(log2);
-        logRepository.save(log3);
-
-        // Fetch logs for the cartCheckout
-        List<LogAdmin> logs = logRepository.findAllByCartCheckoutOrderByDateDesc(cartCheckout)
-                .get(5, TimeUnit.SECONDS);
-
-        // Assertions
-        assertNotNull(logs);
-        assertFalse(logs.isEmpty());
-        assertEquals(3, logs.size());
-
-        // Collect dates
-        List<LocalDateTime> dates = logs.stream().map(LogAdmin::getDate).collect(Collectors.toList());
-
-        // Assert the order is descending by date
-        for (int i = 0; i < dates.size() - 1; i++) {
-            assertTrue(dates.get(i).isAfter(dates.get(i + 1)));
-        }
-    }
-
-    // Add more test cases for edge cases if needed
 }

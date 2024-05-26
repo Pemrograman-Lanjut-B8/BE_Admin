@@ -48,4 +48,7 @@ public class Book {
     @Column(name = "kategori")
     private String kategori;
 
+    @Column(name = "rating")
+    private double rating;
+
 }

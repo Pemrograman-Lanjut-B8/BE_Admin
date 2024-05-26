@@ -16,8 +16,7 @@ class LogAdminTest {
     @BeforeEach
     void setUp() {
         cartCheckout = new CartCheckout();
-        cartCheckout.setId(1L); // Set ID
-        // Set more properties if needed
+        cartCheckout.setId(1L);
 
         logAdmin = new LogAdmin("Test log", cartCheckout);
     }
@@ -41,8 +40,6 @@ class LogAdminTest {
         assertEquals(now.getDayOfMonth(), logDate.getDayOfMonth());
         assertEquals(now.getHour(), logDate.getHour());
         assertEquals(now.getMinute(), logDate.getMinute());
-        // Add more assertions for seconds and milliseconds if needed
-    }
 
-    // Add more test cases for edge cases if needed
+    }
 }

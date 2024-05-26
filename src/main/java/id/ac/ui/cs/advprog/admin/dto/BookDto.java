@@ -30,8 +30,8 @@ public class BookDto {
         String isbn, 
         int jumlahHalaman, 
         String fotoCover, 
-        String kategori, 
-        double rating) 
+        String kategori,
+        double rating)
     {
         this.judulBuku = judulBuku;
         this.penulis = penulis;

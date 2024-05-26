@@ -124,6 +124,7 @@ public class AdminController {
         bookBuilder.setJumlahHalaman(bookData.getJumlahHalaman());
         bookBuilder.setFotoCover(bookData.getFotoCover());
         bookBuilder.setKategori(bookData.getKategori());
+        bookBuilder.setRating(bookData.getRating());
         bookBuilder.setTanggalTerbit(bookData.getTanggalTerbit());
         return bookBuilder.getBook();
     }
