@@ -64,7 +64,7 @@ class CartCheckoutServiceImplTest {
 
     @Test
     void testFindAllCartCheckout() {
-        String url = "http://localhost:8090/cart/list";
+        String url = "http://34.124.134.197/cart/list";
         when(restTemplate.getForEntity(url, CartCheckoutDTO[].class)).thenReturn(new ResponseEntity<>(cartCheckoutDTOs, HttpStatus.OK));
         when(userEntityRepository.findById(any(UUID.class))).thenReturn(Optional.of(userEntity));
 
