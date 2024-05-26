@@ -76,6 +76,20 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it) {
+            exclude(
+                "**/*Application**",
+                "**/dto/*",
+                "**/seeder/*"
+            )
+        }
+    }))
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
 }
 
 sonar {
