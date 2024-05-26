@@ -92,33 +92,33 @@ public class BookServiceTest {
     @Test
     void testUpdateBook() {
         bookService.update(
-            "ISBN 1",
-            "Judul Buku 2",
-            "Penulis 2",
-            "Penerbit 2",
-            "Deskripsi 2",
-            200000.0,
-            20,
-            LocalDate.parse("2020-02-02"),
-            200,
-            "Foto Cover 2",
-            "Kategori 2",
-            4.0
+                "ISBN 1",
+                "Judul Buku 2",
+                "Penulis 2",
+                "Penerbit 2",
+                "Deskripsi 2",
+                200000.0,
+                20,
+                LocalDate.parse("2020-02-02"),
+                200,
+                "Foto Cover 2",
+                "Kategori 2",
+                4.0
         );
 
         verify(bookRepository, times(1)).update(
-            "Judul Buku 2",
-            "Penulis 2",
-            "Penerbit 2",
-            "Deskripsi 2",
-            200000.0,
-            20,
-            LocalDate.parse("2020-02-02"),
-            200,
-            "Foto Cover 2",
-            "Kategori 2",
-            4.0,
-            "ISBN 1"
+                "Judul Buku 2",
+                "Penulis 2",
+                "Penerbit 2",
+                "Deskripsi 2",
+                200000.0,
+                20,
+                LocalDate.parse("2020-02-02"),
+                200,
+                "Foto Cover 2",
+                "Kategori 2",
+                4.0,
+                "ISBN 1"
         );
     }
 

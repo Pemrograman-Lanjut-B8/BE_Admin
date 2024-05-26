@@ -43,7 +43,6 @@ public class BookRepositoryTest {
         bookBuilder.setJumlahHalaman(200);
         bookBuilder.setFotoCover("test.jpg");
         bookBuilder.setKategori("Test Category");
-        bookBuilder.setRating(3.0);
         bookBuilder.setIsbn("1234567890");
         testBook = bookBuilder.getBook();
     }

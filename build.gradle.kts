@@ -79,9 +79,9 @@ tasks.jacocoTestReport {
     classDirectories.setFrom(files(classDirectories.files.map {
         fileTree(it) {
             exclude(
-                "**/*Application**",
-                "**/dto/*",
-                "**/seeder/*"
+                    "**/*Application**",
+                    "**/dto/*",
+                    "**/seeder/*"
             )
         }
     }))
@@ -93,9 +93,9 @@ tasks.jacocoTestReport {
 }
 
 sonar {
-	properties {
-		property("sonar.projectKey", "Pemrograman-Lanjut-B8_BE_Admin")
-		property("sonar.organization", "pemrograman-lanjut-b8")
-		property("sonar.host.url", "https://sonarcloud.io")
-	}
+    properties {
+        property("sonar.projectKey", "Pemrograman-Lanjut-B8_BE_Admin")
+        property("sonar.organization", "pemrograman-lanjut-b8")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
