@@ -44,7 +44,7 @@ public class AdminController {
     @Autowired
     private BookBuilderImpl bookBuilder;
 
-    private static final String ADMIN_TEST_URL = "http://localhost:8081/api/test/admin";
+    private static final String ADMIN_TEST_URL = "http://35.197.128.49/api/test/admin";
 
     @GetMapping("/")
     @ResponseBody
