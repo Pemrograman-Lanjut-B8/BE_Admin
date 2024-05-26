@@ -50,4 +50,5 @@ public class Book {
 
     @Column(name = "rating")
     private double rating;
+
 }

@@ -1,3 +1,4 @@
+
 package id.ac.ui.cs.advprog.admin.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ import id.ac.ui.cs.advprog.admin.model.builders.BookBuilderImpl;
 public class BookTest {
     private List<Book> books;
     private BookBuilderImpl bookBuilder;
-    
+
     @BeforeEach
     void setup() {
         bookBuilder = new BookBuilderImpl();

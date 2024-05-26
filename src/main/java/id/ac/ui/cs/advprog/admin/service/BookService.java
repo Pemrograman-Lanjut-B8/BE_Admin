@@ -20,7 +20,7 @@ public interface BookService {
         LocalDate tanggalTerbit, 
         int jumlahHalaman, 
         String fotoCover, 
-        String kategori, 
+        String kategori,
         double rating
     );
     public void deleteByIsbn(String isbn);

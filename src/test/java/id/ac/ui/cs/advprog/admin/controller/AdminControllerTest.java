@@ -1,3 +1,4 @@
+
 package id.ac.ui.cs.advprog.admin.controller;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,9 +60,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(get("/api/admin/")
-            .header("Authorization", "Bearer testToken"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("<h1>Welcome to Admin Page</h1>"));
+                        .header("Authorization", "Bearer testToken"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("<h1>Welcome to Admin Page</h1>"));
     }
 
     @Test
@@ -72,8 +73,8 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(get("/api/admin/")
-            .header("Authorization", "Bearer testToken"))
-            .andExpect(content().string("Unauthorized"));
+                        .header("Authorization", "Bearer testToken"))
+                .andExpect(content().string("Unauthorized"));
     }
 
     @Test
@@ -88,9 +89,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(post("/api/admin/book")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isCreated());
 
         verify(bookService, times(1)).createBook(expectedBook);
@@ -104,9 +105,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(post("/api/admin/book")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -120,9 +121,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(post("/api/admin/book")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isConflict());
     }
 
@@ -136,9 +137,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(put("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isOk());
     }
 
@@ -150,9 +151,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(put("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -166,9 +167,9 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(put("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"judulBuku\":\"Judul Buku\",\"penulis\":\"Penulis\",\"penerbit\":\"Penerbit\",\"tanggalTerbit\":\"2020-01-01\",\"deskripsi\":\"Deskripsi\",\"harga\":100000.0,\"stok\":10,\"isbn\":\"1234567890\",\"jumlahHalaman\":100,\"fotoCover\":\"foto.jpg\",\"kategori\":\"Kategori\",\"rating\":4.5}"))
                 .andExpect(status().isNotFound());
     }
 
@@ -180,7 +181,7 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(delete("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken"))
+                        .header("Authorization", "Bearer testToken"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -194,7 +195,7 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(delete("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken"))
+                        .header("Authorization", "Bearer testToken"))
                 .andExpect(status().isOk());
     }
 
@@ -208,7 +209,7 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(delete("/api/admin/book/1234567890")
-                .header("Authorization", "Bearer testToken"))
+                        .header("Authorization", "Bearer testToken"))
                 .andExpect(status().isNotFound());
     }
 
@@ -225,7 +226,7 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(get("/api/admin/users")
-                .header("Authorization", "Bearer testToken"))
+                        .header("Authorization", "Bearer testToken"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.message").value("Users retrieved successfully"))
@@ -246,7 +247,7 @@ public class AdminControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(adminControllerSpy).build();
 
         mockMvc.perform(get("/api/admin/users")
-                .header("Authorization", "Bearer testToken"))
+                        .header("Authorization", "Bearer testToken"))
                 .andExpect(status().isUnauthorized());
     }
 }

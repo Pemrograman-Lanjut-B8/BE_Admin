@@ -65,26 +65,26 @@ public class AdminController {
 
         if (response.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ResponseDto<>("error", "Unauthorized", null));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseDto<>("error", "Unauthorized", null));
         }
 
         if (bookService.findByIsbn(bookDto.getIsbn()) != null) {
             return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(
-                    new ResponseDto<>("error", "Book already exists", null)
-                );
+                    .status(HttpStatus.CONFLICT)
+                    .body(
+                            new ResponseDto<>("error", "Book already exists", null)
+                    );
         }
 
         Book book = buildBook(bookDto.getIsbn(), bookDto);
         bookService.createBook(book);
 
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(
-                new ResponseDto<>("success", "Book added successfully", book)
-            );
+                .status(HttpStatus.CREATED)
+                .body(
+                        new ResponseDto<>("success", "Book added successfully", book)
+                );
     }
 
     @SuppressWarnings("rawtypes")
@@ -95,40 +95,40 @@ public class AdminController {
 
         if (response.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ResponseDto<>("error", "Unauthorized", null));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseDto<>("error", "Unauthorized", null));
         }
 
         if (bookService.findByIsbn(isbn) == null) {
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(
-                    new ResponseDto<>("error", "Book not found", null)
-                );
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(
+                            new ResponseDto<>("error", "Book not found", null)
+                    );
         }
 
         bookService.update(
-            isbn,
-            bookDto.getJudulBuku(),
-            bookDto.getPenulis(),
-            bookDto.getPenerbit(),
-            bookDto.getDeskripsi(),
-            bookDto.getHarga(),
-            bookDto.getStok(),
-            bookDto.getTanggalTerbit(),
-            bookDto.getJumlahHalaman(),
-            bookDto.getFotoCover(),
-            bookDto.getKategori(),
-            bookDto.getRating()
+                isbn,
+                bookDto.getJudulBuku(),
+                bookDto.getPenulis(),
+                bookDto.getPenerbit(),
+                bookDto.getDeskripsi(),
+                bookDto.getHarga(),
+                bookDto.getStok(),
+                bookDto.getTanggalTerbit(),
+                bookDto.getJumlahHalaman(),
+                bookDto.getFotoCover(),
+                bookDto.getKategori(),
+                bookDto.getRating()
         );
 
         Book book = bookService.findByIsbn(isbn);
 
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(
-                new ResponseDto<>("success", "Book updated successfully", book)
-            );
+                .status(HttpStatus.OK)
+                .body(
+                        new ResponseDto<>("success", "Book updated successfully", book)
+                );
     }
 
     @SuppressWarnings("rawtypes")
@@ -138,25 +138,25 @@ public class AdminController {
 
         if (response.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ResponseDto<>("error", "Unauthorized", null));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseDto<>("error", "Unauthorized", null));
         }
 
         if (bookService.findByIsbn(isbn) == null) {
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(
-                    new ResponseDto<>("error", "Book not found", null)
-                );
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(
+                            new ResponseDto<>("error", "Book not found", null)
+                    );
         }
 
         bookService.deleteByIsbn(isbn);
 
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(
-                new ResponseDto<>("success", "Book deleted successfully", null)
-            );
+                .status(HttpStatus.OK)
+                .body(
+                        new ResponseDto<>("success", "Book deleted successfully", null)
+                );
     }
 
     @SuppressWarnings("rawtypes")
@@ -166,19 +166,19 @@ public class AdminController {
 
         if (response.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ResponseDto<>("error", "Unauthorized", null));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseDto<>("error", "Unauthorized", null));
         }
 
         List<UserEntity> users = userService.findAll();
         List<UserDto>  userDtos = users.stream()
-                                      .map(user -> new UserDto(user.getUsername(), user.getEmail()))
-                                      .collect(Collectors.toList());
+                .map(user -> new UserDto(user.getUsername(), user.getEmail()))
+                .collect(Collectors.toList());
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(
-                new ResponseDto<>("success", "Users retrieved successfully", userDtos)
-            );
+                .status(HttpStatus.OK)
+                .body(
+                        new ResponseDto<>("success", "Users retrieved successfully", userDtos)
+                );
     }
 
     private Book buildBook(String isbn, BookDto bookData) {
