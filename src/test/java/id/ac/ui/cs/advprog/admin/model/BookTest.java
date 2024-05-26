@@ -1,4 +1,7 @@
+
 package id.ac.ui.cs.advprog.admin.model;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ import id.ac.ui.cs.advprog.admin.model.builders.BookBuilderImpl;
 public class BookTest {
     private List<Book> books;
     private BookBuilderImpl bookBuilder;
-    
+
     @BeforeEach
     void setup() {
         bookBuilder = new BookBuilderImpl();
@@ -28,7 +31,7 @@ public class BookTest {
         bookBuilder.setJumlahHalaman(100);
         bookBuilder.setFotoCover("Foto Cover 1");
         bookBuilder.setKategori("Kategori 1");
-//        bookBuilder.setRating(4.5);
+        bookBuilder.setRating(4.5);
         bookBuilder.setTanggalTerbit(LocalDate.parse("2020-01-01"));
         this.books.add(bookBuilder.getBook());
 
@@ -43,7 +46,7 @@ public class BookTest {
         bookBuilder.setJumlahHalaman(200);
         bookBuilder.setFotoCover("Foto Cover 2");
         bookBuilder.setKategori("Kategori 2");
-//        bookBuilder.setRating(4.0);
+        bookBuilder.setRating(4.0);
         bookBuilder.setTanggalTerbit(LocalDate.parse("2020-02-02"));
         this.books.add(bookBuilder.getBook());
     }
@@ -60,7 +63,7 @@ public class BookTest {
         assert books.get(0).getJumlahHalaman() == 100;
         assert books.get(0).getFotoCover().equals("Foto Cover 1");
         assert books.get(0).getKategori().equals("Kategori 1");
-//        assert books.get(0).getRating() == 4.5;
+        assert books.get(0).getRating() == 4.5;
         assert books.get(0).getTanggalTerbit().equals(LocalDate.parse("2020-01-01"));
 
         assert books.get(1).getJudulBuku().equals("Judul Buku 2");
@@ -73,7 +76,16 @@ public class BookTest {
         assert books.get(1).getJumlahHalaman() == 200;
         assert books.get(1).getFotoCover().equals("Foto Cover 2");
         assert books.get(1).getKategori().equals("Kategori 2");
-//        assert books.get(1).getRating() == 4.0;
+        assert books.get(1).getRating() == 4.0;
         assert books.get(1).getTanggalTerbit().equals(LocalDate.parse("2020-02-02"));
+    }
+
+    @Test
+    void testSetBook() {
+        BookBuilderImpl bookBuilder = new BookBuilderImpl();
+        Book book = new Book();
+        bookBuilder.setBook(book);
+        Book result = bookBuilder.getBook();
+        assertEquals(book, result);
     }
 }

@@ -10,4 +10,8 @@ class AdminApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void testApplicationStartup() {
+        AdminApplication.main(new String[] {});
+    }
 }

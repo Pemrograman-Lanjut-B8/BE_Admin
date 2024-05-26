@@ -42,7 +42,7 @@ public class CartCheckoutServiceImpl implements CartCheckoutService {
     private RestTemplate restTemplate;
 
     public List<CartCheckoutAdminDTO> findAllCartCheckout() {
-        String url = "http://localhost:8090/cart/list";
+        String url = "http://34.124.134.197/cart/list";
 
         ResponseEntity<CartCheckoutDTO[]> cartCheckoutResult = restTemplate.getForEntity(url, CartCheckoutDTO[].class);
 
