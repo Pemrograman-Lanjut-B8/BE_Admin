@@ -24,7 +24,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    private static final String USER_TEST_URL = "http://localhost:8081/api/test/user";
+    private static final String USER_TEST_URL = "http://35.197.128.49/api/test/user";
 
     @GetMapping("/")
     @ResponseBody
