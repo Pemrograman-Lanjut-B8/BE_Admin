@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.admin.repository;
 
-import id.ac.ui.cs.advprog.admin.model.CartCheckout;
 import id.ac.ui.cs.advprog.admin.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
