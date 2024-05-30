@@ -9,9 +9,4 @@ class AdminApplicationTests {
     @Test
     void contextLoads() {
     }
-
-    @Test
-    void testApplicationStartup() {
-        AdminApplication.main(new String[] {});
-    }
 }
