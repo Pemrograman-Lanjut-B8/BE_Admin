@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.admin.dto;
 
-import id.ac.ui.cs.advprog.admin.model.CartItems;
 import lombok.Getter;
 import lombok.Setter;
 

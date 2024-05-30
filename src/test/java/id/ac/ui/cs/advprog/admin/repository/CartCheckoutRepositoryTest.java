@@ -18,6 +18,7 @@ public class CartCheckoutRepositoryTest {
     @Mock
     private CartCheckoutRepository cartCheckoutRepository;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
